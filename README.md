@@ -11,3 +11,7 @@ A homework of literature review about learning what deep learning doing in biome
 由于是手工整理，难免速度有限、存在错漏，以及不排除将来可能不定期断档停更。提前做免责申明，还请见谅！
 
 本repo基于 [CC0 协议](LICENSE) 发布，允许自由修改和传播。
+
+## 数据
+
+详见 Excel文件 [papers.xlsx](papers.xlsx)
