@@ -41,13 +41,14 @@ def main():
 
     df2 = pd.DataFrame(columns = ['PMID', 'DOI', '标题', '杂志', '发表日期'])
     for paper in papers['PubmedArticle']:
-        df2 = df2.append({
-            'PMID': paper['MedlineCitation']['PMID'],
-            'DOI': get_doi(paper['MedlineCitation']['Article']['ELocationID']),
-            '标题': paper['MedlineCitation']['Article']['ArticleTitle'],
-            '杂志': paper['MedlineCitation']['Article']['Journal']['Title'],
-            '发表日期': get_pub_date(paper['MedlineCitation']['Article']['ArticleDate'])},
-            ignore_index = True)
+        df3 = pd.DataFrame({
+            'PMID': [ paper['MedlineCitation']['PMID'] ],
+            'DOI': [ get_doi(paper['MedlineCitation']['Article']['ELocationID']) ],
+            '标题': [ paper['MedlineCitation']['Article']['ArticleTitle'] ],
+            '杂志': [ paper['MedlineCitation']['Article']['Journal']['Title'] ],
+            '发表日期': [ get_pub_date(paper['MedlineCitation']['Article']['ArticleDate']) ]
+            })
+        df2 = pd.concat([df2, df3], ignore_index = True)
     
     df3 = df.astype(str).merge(df2, on='PMID', how='left')
     df3.to_csv(sys.stdout, sep='\t', index=False, header=True)
