@@ -5,6 +5,7 @@
 #
 import sys
 import pandas as pd
+import re
 from Bio import Entrez
 
 def fetch_details(id_list):
@@ -32,7 +33,13 @@ def main():
         print("Usage:", sys.argv[0], "<input.xlsx>")
         exit(1)
 
-    df = pd.read_excel(sys.argv[1], na_filter=False)
+    filename = sys.argv[1]
+    if re.match('\.xlsx$', filename):
+        df = pd.read_excel(filename, na_filter=False)
+    elif re.match('\.csv', filename):
+        df = pd.read_csv(filename, sep = ',', na_filter=False)
+    else:
+        df = pd.read_csv(filename, sep = '\t', na_filter=False)
     #print(df)
 
     papers = fetch_details(df['PMID'].values)
