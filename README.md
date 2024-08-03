@@ -1,17 +1,17 @@
-# 深度学习在生物医药领域有哪些具体应用？<br> What does deep learning doing in biomed?
+# 深度学习在生物医药领域的应用
 
-A homework of literature review about learning what deep learning doing in biomed field.
+一个持续更新的专有领域知识库，聚焦深度学习技术在生物医药领域的具体应用，通过收集和整理最新科研文献提供信息。
 
 ---
 
 ## 动机
 
-我在 [NCBI PubMed](https://pubmed.ncbi.nlm.nih.gov/) 订阅了`"deep learning" OR "convolutional neural networks"`的关键词，每天会给我的邮箱推送数篇到数十篇文献，内容繁多，涉猎广泛。由于是PubMed，故绝大多数内容还是跟生物医药相关的。也由此，我打算在快速浏览之余，手工整理下这些论文的信息，从而对“深度学习在生物医药领域有哪些具体应用”这个问题有个更好的记录和跟踪，于是创建此repo。
+我曾在 [NCBI PubMed](https://pubmed.ncbi.nlm.nih.gov/) 订阅了关键词"deep learning" OR "convolutional neural networks"，每天会收到数十至数百篇相关文献的推送，内容繁多，涉猎广泛，且都与生物医药相关。2022年，我决定在快速浏览这些文献的同时，手工整理其信息，以便更系统地理解“深度学习在生物医药领域的应用”，然而，由于手工整理文献信息的工作量太大，这个项目并未进行多久便停滞了。两年后，大语言模型（LLM）迅速崛起，让自动化的文献整理和信息提取变得可能，本项目也作为一项尝试而重新继续。
 
-由于是手工整理，难免速度有限、存在错漏，以及不排除将来可能不定期断档停更。提前做免责申明，还请见谅！
+## 免责声明
 
-本repo基于 [CC0 协议](LICENSE) 发布，允许自由修改和传播。
+本项目信息由手工或AI整理，信息难免存在错漏，请使用时务必注意核实。此外，由于各种原因，项目可能会不定期断档停更，还请见谅！
 
-## 数据
+## 许可证
 
-详见 Excel文件 [papers.xlsx](papers.xlsx)
+本仓库基于 [MIT协议](LICENSE) 发布，允许自由修改和传播。
