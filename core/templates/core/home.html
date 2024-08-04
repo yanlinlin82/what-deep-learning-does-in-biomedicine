@@ -4,6 +4,60 @@
 
 <h1>深度学习在生物医药领域中的应用</h1>
 
-<p>本数据库中的数据，是通过收集、整理、解析并汇总最新发表的科研文献而获得，供了解相关领域前沿研究进展之用。</p>
+<p class="mt-3">本数据库中的数据，是通过收集、整理、解析并汇总最新发表的科研文献而获得，供了解相关领域前沿研究进展之用。除数据会持续更新外，相关功能也将逐步补充完善中。</p>
+
+<p class="mt-1">有任何建议，欢迎联系：linlin.yan (AT) bioinfo.app 或 微信 yanlinlin82</p>
+
+{% include "core/includes/paginator.html" %}
+
+<table class="table table-striped border" style="max-width:100%;">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>推送日期</th>
+      <th>文章</th>
+      <th>类型</th>
+      <th>简述</th>
+      <th>创新点</th>
+      <th>不足</th>
+      <th>研究目的</th>
+      <th>研究对象</th>
+      <th>领域</th>
+      <th>病种</th>
+      <th>技术</th>
+      <th>模型</th>
+      <th>数据类型</th>
+      <th>样本量</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for paper in papers %}
+    <tr>
+      <td>{{ paper.index }}</td>
+      <td>{{ paper.created | date:"Y-m-d" }}</td>
+      <td>
+        <div>{{ paper.title }}</div>
+        <div class="mt-2">{{ paper.pub_date }}, {{ paper.journal }}</div>
+        <div class="mt-2">
+          {% if paper.doi %}DOI:<a href="https://doi.org/{{ paper.doi }}">{{ paper.doi }}</a>{% endif %}
+          {% if paper.pmid %}PMID:<a href="https://pubmed.ncbi.nlm.nih.gov/{{ paper.pmid }}">{{ paper.pmid }}</a>{% endif %}
+        </div>
+      </td>
+      <td>{{ paper.article_type }}</td>
+      <td>{{ paper.description }}</td>
+      <td>{{ paper.novelty }}</td>
+      <td>{{ paper.limitation }}</td>
+      <td>{{ paper.research_goal }}</td>
+      <td>{{ paper.research_objects }}</td>
+      <td>{{ paper.field_category }}</td>
+      <td>{{ paper.disease_category }}</td>
+      <td>{{ paper.technique }}</td>
+      <td>{{ paper.model_type }}</td>
+      <td>{{ paper.data_type }}</td>
+      <td>{{ paper.sample_size }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}
