@@ -1,3 +1,5 @@
 .venv/
 .env
 output/
+db.sqlite3
+__pycache__/
