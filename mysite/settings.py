@@ -11,11 +11,15 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
+import dotenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+if os.path.exists(env_file):
+    dotenv.load_dotenv(env_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -24,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-onep5@r39_e*wsmz)8j#t8aq_fuxkaa3b_lk-g=fh+2knuociv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [ 'localhost', '127.0.0.1', '[::1]', 'biomed-dl.bioinfo-assist.com' ]
 
