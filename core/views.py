@@ -9,6 +9,7 @@ import urllib
 import base64
 import qrcode
 import json
+import calendar
 from io import BytesIO
 from collections import Counter
 from openpyxl import Workbook
@@ -72,8 +73,62 @@ def format_impact_factor(impact_factor):
         return "<0.1"
     return f"{impact_factor:.1f}"
 
+def to_number(s):
+    try:
+        return float(s)
+    except ValueError:
+        return ''
+
 def home(request):
     papers = Paper.objects.all()
+
+    filter_quantile = request.GET.get('fq') or ''
+    if filter_quantile == '1':
+        papers = papers.filter(journal_impact_factor_quartile='1')
+    elif filter_quantile == '2':
+        papers = papers.filter(journal_impact_factor_quartile__lte='2')
+    elif filter_quantile == '3':
+        papers = papers.filter(journal_impact_factor_quartile__lte='3')
+    else:
+        filter_quantile = ''
+
+    filter_impact_factor = request.GET.get('fi') or ''
+    impact_factor_min, impact_factor_max = '', ''
+    if filter_impact_factor:
+        values = (filter_impact_factor.split('-') + [''])[:2]
+        impact_factor_min = to_number(values[0])
+        impact_factor_max = to_number(values[1])
+    if impact_factor_min != '':
+        papers = papers.filter(journal_impact_factor__gte=impact_factor_min)
+    if impact_factor_max != '':
+        papers = papers.filter(journal_impact_factor__lte=impact_factor_max)
+
+    filter_pub_date = request.GET.get('fd') or ''
+    pub_date_start, pub_date_end = None, None
+    if filter_pub_date:
+        values = (filter_pub_date.split('-') + [''])[:2]
+        if values[0] != '':
+            if len(values[0]) == 4:
+                pub_date_start = datetime.datetime.strptime(values[0] + '0101', '%Y%m%d')
+            elif len(values[0]) == 6:
+                pub_date_start = datetime.datetime.strptime(values[0] + '01', '%Y%m%d')
+        if values[1] != '':
+            if len(values[1]) == 4:
+                pub_date_end = datetime.datetime.strptime(values[1] + '1231', '%Y%m%d')
+            elif len(values[1]) == 6:
+                year_month = values[1]
+                year = int(year_month[:4])
+                month = int(year_month[4:])
+                last_day = calendar.monthrange(year, month)[1]
+                pub_date_end = datetime.datetime(year, month, last_day)
+    if pub_date_start is not None and pub_date_end is not None:
+        if pub_date_start > pub_date_end:
+            pub_date_start, pub_date_end = pub_date_end, pub_date_start
+    print(f"pub_date_start: {pub_date_start}, pub_date_end: {pub_date_end}")
+    if pub_date_start is not None:
+        papers = papers.filter(pub_date_dt__gte=pub_date_start)
+    if pub_date_end is not None:
+        papers = papers.filter(pub_date_dt__lte=pub_date_end)
 
     query = request.GET.get('q') or ''
     if query:
@@ -94,13 +149,6 @@ def home(request):
             Q(model_type__icontains=query) |
             Q(data_type__icontains=query) |
             Q(sample_size__icontains=query))
-
-    pub_year = request.GET.get('pub_year') or ''
-    pub_month = request.GET.get('pub_month') or ''
-    if pub_year:
-        papers = papers.filter(pub_date_dt__year=pub_year)
-        if pub_month:
-            papers = papers.filter(pub_date_dt__month=pub_month)
 
     papers = papers.order_by('-source', '-pub_date_dt')
 
@@ -143,8 +191,11 @@ def home(request):
 
     return render(request, 'core/home.html', {
         'query': query,
-        'pub_year': pub_year,
-        'pub_month': pub_month,
+        'filter_quantile': filter_quantile,
+        'impact_factor_min': impact_factor_min,
+        'impact_factor_max': impact_factor_max,
+        'pub_date_start': pub_date_start.strftime('%Y%m') if pub_date_start else '',
+        'pub_date_end': pub_date_end.strftime('%Y%m') if pub_date_end else '',
         'get_params': get_params,
         'papers': papers,
         'items': items,
@@ -334,7 +385,7 @@ def wx_create_payment(request):
 
 def decrypt_wechat_ciphertext(api_key, associated_data, nonce, ciphertext):
     # Base64 decode the ciphertext
-    ciphertext = b64decode(ciphertext)
+    ciphertext = base64.b64decode(ciphertext)
 
     # Prepare the AES cipher
     cipher = AES.new(api_key.encode('utf-8'), AES.MODE_GCM, nonce=nonce.encode('utf-8'))
